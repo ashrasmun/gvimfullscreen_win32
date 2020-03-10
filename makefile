@@ -1,8 +1,24 @@
-gvimfullscreen.dll: gvimfullscreen.c
-	cl /LD user32.lib gvimfullscreen.c
+CC = cl
+#highest warning level; treat warnings as errors; enable dbg info
+CFLAGS = /W4 /WX /LD /Zi /Oy-
+DEBUG_FLAGS = /Od /Ob0 /D "_DEBUG"
+RELEASE_FLAGS = /O2 /Ob2 /D "NDEBUG"
+LIBS = user32.lib gdi32.lib
 
-clean: 
+all: release
+
+release: gvimfullscreen.c
+	$(CC) $(CFLAGS) $(RELEASE_FLAGS) $(LIBS) gvimfullscreen.c
+
+debug: gvimfullscreen.c
+	$(CC) $(CFLAGS) $(DEBUG_FLAGS) $(LIBS) gvimfullscreen.c
+
+clean:
 	del *.obj
-	del *.dll
 	del *.exp
 	del *.lib
+	del *.pdb
+	del *.ilk
+
+distclean: clean
+	del *.dll
