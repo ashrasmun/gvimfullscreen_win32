@@ -1,0 +1,7 @@
+# ignore all build-generated files
+*.dll
+*.exp
+*.ilk
+*.lib
+*.obj
+*.pdb
