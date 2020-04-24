@@ -89,9 +89,13 @@ LONG _declspec(dllexport) ToggleFullScreen(int flag)
     }
 
     // nord0.gui = #2E3440
-    SetClassLongPtr(hTop, GCLP_HBRBACKGROUND,
-            (ULONG_PTR)CreateSolidBrush(RGB(46, 52, 64)));
+    // SetClassLongPtr(hTop, GCLP_HBRBACKGROUND,
+    //         (ULONG_PTR)CreateSolidBrush(RGB(46, 52, 64)));
 
+    // gotham normal background = #0c1014
+    SetClassLongPtr(hTop, GCLP_HBRBACKGROUND,
+            (ULONG_PTR)CreateSolidBrush(RGB(13, 16, 20)));
+    
     return GetLastError();
 }
 
