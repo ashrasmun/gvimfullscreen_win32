@@ -24,6 +24,37 @@ BOOL CALLBACK FindWindowProc(HWND hwnd, LPARAM lParam)
     return FALSE;
 }
 
+void TestBackgroundColor(int color)
+{
+    char buffer[10];
+    _itoa_s(color, buffer, _countof(buffer), 16);
+    MessageBox(NULL, buffer, "Testing...", MB_OK);
+}
+
+COLORREF IntToRGB(int color_code)
+{
+    int rgb[3] = { 0 };
+
+    for (int i = 0; i < 6; i++)
+    {
+        rgb[i / 2] += (color_code % 16) * ((i % 2) ? 16 : 1);
+        color_code /= 16;
+    }
+
+    return RGB(rgb[2], rgb[1], rgb[0]);
+}
+
+LONG _declspec(dllexport) SetBackgroundColor(int color_code)
+{
+    HWND hTop = NULL;
+    EnumThreadWindows(GetCurrentThreadId(), FindWindowProc, (LPARAM)&hTop);
+
+    SetClassLongPtr(hTop, GCLP_HBRBACKGROUND,
+            (ULONG_PTR)CreateSolidBrush(IntToRGB(color_code)));
+
+    return GetLastError();
+}
+
 LONG _declspec(dllexport) ToggleFullScreen(int flag)
 {
     HWND hTop = NULL;
@@ -88,14 +119,6 @@ LONG _declspec(dllexport) ToggleFullScreen(int flag)
         EnumChildWindows(hTop, EnumChildProc, 0);
     }
 
-    // nord0.gui = #2E3440
-    // SetClassLongPtr(hTop, GCLP_HBRBACKGROUND,
-    //         (ULONG_PTR)CreateSolidBrush(RGB(46, 52, 64)));
-
-    // gotham normal background = #0c1014
-    SetClassLongPtr(hTop, GCLP_HBRBACKGROUND,
-            (ULONG_PTR)CreateSolidBrush(RGB(13, 16, 20)));
-    
     return GetLastError();
 }
 
